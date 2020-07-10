@@ -1,0 +1,18 @@
+@import "~bootstrap";
+body {
+    background-color: lightgray;
+}
+
+.card {
+    height: 100px;
+    width: 100px;
+    display: inline-block;
+}
+
+.back {
+    background-color: #0ac3a7;
+}
+
+.recto {
+    background-image: url("../image/cards.png");
+}
