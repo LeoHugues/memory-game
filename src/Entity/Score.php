@@ -32,6 +32,11 @@ class Score
      */
     private $date;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=Score::class, inversedBy="scores")
+     */
+    protected $player;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -71,5 +76,21 @@ class Score
         $this->date = $date;
 
         return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getPlayer()
+    {
+        return $this->player;
+    }
+
+    /**
+     * @param mixed $player
+     */
+    public function setPlayer($player): void
+    {
+        $this->player = $player;
     }
 }

@@ -1,0 +1,6 @@
+{% form_theme form 'bootstrap_4_layout.html.twig' %}
+
+{{ form_start(form, {'attr': {'class': 'subscribe-form', 'id': 'register-form'}}) }}
+    {{ form_row(form.username) }}
+    {{ form_row(form.submit) }}
+{{ form_end(form) }}
