@@ -18,12 +18,7 @@ class Score
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $username;
-
-    /**
-     * @ORM\Column(type="float")
+     * @ORM\Column(type="integer")
      */
     private $time;
 
@@ -33,9 +28,14 @@ class Score
     private $date;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Score::class, inversedBy="scores")
+     * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="scores")
      */
     protected $player;
+
+    public function __construct()
+    {
+        $this->date = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -54,16 +54,20 @@ class Score
         return $this;
     }
 
-    public function getTime(): ?float
+    /**
+     * @return integer
+     */
+    public function getTime()
     {
         return $this->time;
     }
 
-    public function setTime(float $time): self
+    /**
+     * @param integer $time
+     */
+    public function setTime($time): void
     {
         $this->time = $time;
-
-        return $this;
     }
 
     public function getDate(): ?\DateTimeInterface

@@ -57,26 +57,20 @@ class MemoryGameController extends AbstractController
      *
      * @return JsonResponse|\Symfony\Component\HttpFoundation\Response
      * @Route("/score/{id}", name="form_save_score")
+     * @ParamConverter("player", class="App\Entity\Player")
      */
     public function ajaxSaveScore(Player $player, Request $request)
     {
         $em = $this->getDoctrine()->getManager();
 
         $score = new Score();
-        $form = $this->createForm(ScoreType::class, $score);
+        $score->setTime($request->get('time'));
 
-        $form->handleRequest($request);
-        if($form->isSubmitted() && $form->isValid()) {
-            /** @var Score $score */
-            $score = $form->getData();
-            $score->setPlayer($player);
+        $score->setPlayer($player);
 
-            $em->persist($score);
-            $em->flush();
+        $em->persist($score);
+        $em->flush();
 
-            return new JsonResponse(['status' => 'succes']);
-        }
-
-        return $this->render('memory_game/register.html.twig', array('form' => $form->createView()));
+        return new JsonResponse(['status' => 'succes']);
     }
 }

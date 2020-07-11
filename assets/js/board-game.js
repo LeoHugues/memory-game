@@ -3,10 +3,10 @@ import $ from 'jquery';
 
 const PAIR_NUMBER = 18;
 
-const TIME_LIMIT = 10;
+const TIME_LIMIT = 300;
 const FULL_DASH_ARRAY = 283;
-const WARNING_THRESHOLD = 10;
-const ALERT_THRESHOLD = 5;
+const WARNING_THRESHOLD = 60;
+const ALERT_THRESHOLD = 30;
 const COLOR_CODES = {
     info: {
         color: "green"
@@ -58,7 +58,11 @@ $( ".card" ).on('click', function (e) {
                 turnCard(card.attr('id'));
                 console.log('nouvelle pair découverte');
                 if (numberPairFound === PAIR_NUMBER) {
+                    postScore(timePassed);
+                    $('#modal-content').html('<h1>Gagné</h1><span>Score : '+ timePassed +'</span>');
+                    $('#modal').show();
                     console.log('Wiiiiin');
+                    clearInterval(timerInterval);
                 }
             } else {
                 // J'affiche la carte qui viens d'être séléctionné
@@ -117,16 +121,14 @@ function getRegisterForm() {
         })
 }
 
-function postScore() {
+function postScore(score) {
 
     $.ajax({
         url: "/score/" + playerId,
         type: 'POST',
-        data: {}
+        data: {'time': score}
     }).done(function(response) { //
-        playerId = response.id;
-        $('#modal').hide();
-        console.log('ça passe !');
+        console.log('score enregistré');
     }).fail(()=>{
         console.log('ERROR ON SUBMIT');
     });
@@ -171,9 +173,9 @@ function startTimer() {
     timerInterval = setInterval(() => {
         timePassed = timePassed += 1;
         timeLeft = TIME_LIMIT - timePassed;
-        document.getElementById("base-timer-label").innerHTML = formatTime(
+        $("#base-timer-label").html(formatTime(
             timeLeft
-        );
+        ));
         setCircleDasharray();
         setRemainingPathColor(timeLeft);
 
@@ -197,19 +199,9 @@ function formatTime(time) {
 function setRemainingPathColor(timeLeft) {
     const { alert, warning, info } = COLOR_CODES;
     if (timeLeft <= alert.threshold) {
-        document
-            .getElementById("base-timer-path-remaining")
-            .classList.remove(warning.color);
-        document
-            .getElementById("base-timer-path-remaining")
-            .classList.add(alert.color);
+        $("#base-timer-path-remaining").removeClass(warning.color).addClass(alert.color);
     } else if (timeLeft <= warning.threshold) {
-        document
-            .getElementById("base-timer-path-remaining")
-            .classList.remove(info.color);
-        document
-            .getElementById("base-timer-path-remaining")
-            .classList.add(warning.color);
+        $("#base-timer-path-remaining").removeClass(info.color).addClass(warning.color);
     }
 }
 
@@ -222,9 +214,7 @@ function setCircleDasharray() {
     const circleDasharray = `${(
         calculateTimeFraction() * FULL_DASH_ARRAY
     ).toFixed(0)} 283`;
-    document
-        .getElementById("base-timer-path-remaining")
-        .setAttribute("stroke-dasharray", circleDasharray);
+    $("#base-timer-path-remaining").attr("stroke-dasharray", circleDasharray);
 }
 
 // <===========================================================>
