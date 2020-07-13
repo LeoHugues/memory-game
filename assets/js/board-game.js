@@ -35,6 +35,7 @@ initGame();
 
 // Fonction de création d'une nouvelle partie
 function initGame() {
+    getScores();
     getRegisterForm();
     generateBoardGame();
 }
@@ -129,6 +130,40 @@ function postScore(score) {
         data: {'time': score}
     }).done(function(response) { //
         console.log('score enregistré');
+    }).fail(()=>{
+        console.log('ERROR ON SUBMIT');
+    });
+}
+
+function getScores(score) {
+
+    $.ajax({
+        url: "/scores",
+        type: 'GET',
+    }).done(function(response) { //
+        console.log('score enregistré');
+        let scores = JSON.parse(response);
+        let table = $('#scores tbody');
+        for (let i in scores) {
+            let tr = document.createElement('tr');
+
+            let th = document.createElement('th');
+            let tdName = document.createElement('td');
+            let tdScore = document.createElement('td');
+
+            th.innerHTML = String(parseInt(i) + 1);
+            tdName.innerHTML = scores[i].player.username;
+            tdScore.innerHTML = scores[i].time;
+
+            th.scope = 'row';
+
+            tr.append(th);
+            tr.append(tdName);
+            tr.append(tdScore);
+
+            table.append(tr);
+        }
+
     }).fail(()=>{
         console.log('ERROR ON SUBMIT');
     });

@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ScoreRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=ScoreRepository::class)
@@ -19,16 +20,22 @@ class Score
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Groups("ajaxScore")
      */
     private $time;
 
     /**
      * @ORM\Column(type="datetime")
+     *
+     * @Groups("ajaxScore")
      */
     private $date;
 
     /**
      * @ORM\ManyToOne(targetEntity=Player::class, inversedBy="scores")
+     *
+     * @Groups("ajaxScore")
      */
     protected $player;
 
@@ -40,18 +47,6 @@ class Score
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getUsername(): ?string
-    {
-        return $this->username;
-    }
-
-    public function setUsername(string $username): self
-    {
-        $this->username = $username;
-
-        return $this;
     }
 
     /**

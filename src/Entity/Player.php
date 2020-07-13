@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\PlayerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @ORM\Entity(repositoryClass=PlayerRepository::class)
@@ -20,6 +21,8 @@ class Player
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Groups("ajaxScore")
      */
     private $username;
 

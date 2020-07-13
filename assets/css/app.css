@@ -3,6 +3,9 @@ body {
     background-color: lightgray;
 }
 
+/* ============== Cards ==================== */
+
+
 .card {
     height: 100px;
     width: 100px;
@@ -16,6 +19,8 @@ body {
 .recto {
     background-image: url("../image/cards.png");
 }
+
+/* ============== Timer ==================== */
 
 .base-timer {
     position: relative;

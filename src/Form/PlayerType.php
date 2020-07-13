@@ -20,7 +20,7 @@ class PlayerType extends AbstractType
                 'label' => "Pseudo"
             ])
             ->add('submit', SubmitType::class, [
-                'label' => "Lancer !",
+                'label' => "Jouer !",
                 'attr' => [
                     'class' => 'submit btn-success'
                 ]

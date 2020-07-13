@@ -10,7 +10,9 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\SerializerInterface;
 
 class MemoryGameController extends AbstractController
 {
@@ -72,5 +74,21 @@ class MemoryGameController extends AbstractController
         $em->flush();
 
         return new JsonResponse(['status' => 'succes']);
+    }
+
+    /**
+     * @param SerializerInterface $serializer
+     * @param Request $request
+     *
+     * @return JsonResponse|\Symfony\Component\HttpFoundation\Response
+     * @Route("/scores", name="get_scores")
+     */
+    public function ajaxGetRanking(SerializerInterface $serializer, Request $request)
+    {
+        $em         = $this->getDoctrine()->getManager();
+        $scores     = $em->getRepository('App\Entity\Score')->findBy([], ['time' => 'asc'],5);
+        $jsonScores = $serializer->serialize($scores, 'json', ['groups' => 'ajaxScore']);
+
+        return new JsonResponse($jsonScores);
     }
 }
