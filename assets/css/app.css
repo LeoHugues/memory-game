@@ -1,6 +1,6 @@
 @import "~bootstrap";
 body {
-    background-color: lightgray;
+    background-color: #CCD6EB;
 }
 
 /* ============== Cards ==================== */
@@ -13,7 +13,7 @@ body {
 }
 
 .back {
-    background-color: #0ac3a7;
+    background-color: #993955;
 }
 
 .recto {

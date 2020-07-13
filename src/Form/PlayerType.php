@@ -25,6 +25,10 @@ class PlayerType extends AbstractType
                     'class' => 'submit btn-success'
                 ]
             ])
+            ->add('captcha', RecaptchaType::class, [
+                'constraints' => new Recaptcha2(),
+                'required' => true
+            ]);
         ;
     }
 
