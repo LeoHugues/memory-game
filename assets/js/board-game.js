@@ -46,7 +46,7 @@ $( ".card" ).on('click', function (e) {
     var card = $(this);
 
     // On verifie que l'élément est cliquable
-    if (!card.hasClass('unbinded')) {
+    if (!card.hasClass('unbinded') && !card.hasClass('wait')) {
         // Si c'est la première carte du nouvel essai
         if (isNewTry) {
             turnCard(card.attr('id'));
@@ -69,10 +69,20 @@ $( ".card" ).on('click', function (e) {
                 // J'affiche la carte qui viens d'être séléctionné
                 turnCard(card.attr('id'));
 
+                // Je block le clique sur toutes les cartes
+                $('.card').each(function () {
+                    $(this).addClass('wait');
+                });
+
                 // Je laisse un delais avant de retourner les deux cartes face caché
                 setTimeout(() => {
                     turnCard(card.attr('id'));
                     turnCard(selectedCardID);
+
+                    // Je remets les cartes cliquable
+                    $('.wait').each(function () {
+                        $(this).removeClass('wait');
+                    })
                 }, 1000);
 
                 console.log('essaie encore !');
