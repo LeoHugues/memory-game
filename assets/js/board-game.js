@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 const PAIR_NUMBER = 18;
 
-const TIME_LIMIT = 180;
+const TIME_LIMIT = 10;
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 60;
 const ALERT_THRESHOLD = 30;
@@ -47,8 +47,6 @@ function restartGame() {
 
     generateBoardGame();
     $('#modal').hide();
-
-    $("#base-timer-path-remaining").removeClass(warning.color).removeClass(alert.color);
     startTimer();
 }
 
