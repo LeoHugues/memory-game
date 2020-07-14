@@ -1,10 +1,21 @@
 @import "~bootstrap";
+
+@font-face {
+    font-family: "Beattingvile";
+    src: url("../fonts/Beattingvile.otf") format("otf"),
+    url("../fonts/Beattingvile.woff") format("woff");
+}
+
 body {
     background-color: #CCD6EB;
 }
 
-/* ============== Cards ==================== */
-
+/* ============== Game ==================== */
+#game-title {
+    font-size: 14rem;
+    font-family: Beattingvile, serif;
+    color: #AE76A6;
+}
 
 .card {
     height: 100px;
@@ -19,6 +30,7 @@ body {
 .recto {
     background-image: url("../image/cards.png");
 }
+
 
 /* ============== Timer ==================== */
 

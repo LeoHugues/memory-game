@@ -47,6 +47,8 @@ function restartGame() {
 
     generateBoardGame();
     $('#modal').hide();
+
+    $("#base-timer-path-remaining").removeClass(warning.color).removeClass(alert.color);
     startTimer();
 }
 

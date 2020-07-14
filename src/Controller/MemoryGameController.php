@@ -5,12 +5,10 @@ namespace App\Controller;
 use App\Entity\Player;
 use App\Entity\Score;
 use App\Form\PlayerType;
-use App\Form\ScoreType;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -69,10 +67,12 @@ class MemoryGameController extends AbstractController
     {
         $em = $this->getDoctrine()->getManager();
 
+        // Création du nouveau score
         $score = new Score();
         $score->setTime($request->get('time'));
         $score->setPlayer($player);
 
+        // Persistance en BDD
         $em->persist($score);
         $em->flush();
 
