@@ -21,7 +21,7 @@ Les templates se trouvent eux dans le dossier "/template".
 Le code servant à intéragir avec la base de donnée se trouvent dans le controller : "/src/controller/MemoryGameController.php"
 
 
-##Demo
+## Demo
 
 Disponible à l'adresse suivante : https://memory.codeurdulibre.fr/
 
