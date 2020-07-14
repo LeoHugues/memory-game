@@ -3,7 +3,7 @@ import $ from 'jquery';
 
 const PAIR_NUMBER = 18;
 
-const TIME_LIMIT = 300;
+const TIME_LIMIT = 180;
 const FULL_DASH_ARRAY = 283;
 const WARNING_THRESHOLD = 60;
 const ALERT_THRESHOLD = 30;
@@ -37,13 +37,84 @@ initGame();
 function initGame() {
     getScores();
     getRegisterForm();
-    generateBoardGame();
 }
 
+function restartGame() {
+    numberPairFound = 0;
+
+    timePassed = 0;
+    timerInterval = null;
+
+    generateBoardGame();
+    $('#modal').hide();
+    startTimer();
+}
+
+// <====================== PLATEAU DE CARTE ==========================>
+
+
+// Retourne une carte face ouverte si face caché et face caché si face ouverte
+function turnCard(idCard) {
+    var card = $('#' + idCard);
+    if (card.hasClass('recto')) {
+        card.removeClass('recto').addClass('back').removeClass('unbinded');
+    } else if (card.hasClass('back')) {
+        card.removeClass('back').addClass('recto').addClass('unbinded');
+    }
+}
+
+function generateBoardGame() {
+    // Je réccupère ma div contenant mon plateau de carte
+    var memoryBoard = $('#board-game');
+
+    // Je supprime le contenu de la div avant de composer mon nouveau plateau
+    memoryBoard.empty();
+
+    // Pour chaque paire de carte
+    for (var i = 0; i < PAIR_NUMBER; i++)
+    {
+        // Je crée une div associé à une carte
+        var card = document.createElement('div');
+        card.id = 'pair' + i;
+        card.className = 'card block col col-lg-2 back';
+        card.dataset.pair = i;
+
+        // Et sa paire
+        var cardbis = document.createElement('div');
+        cardbis.id = 'pairbis' + i;
+        cardbis.className = 'card block col col-lg-2 back';
+        cardbis.dataset.pair = i;
+
+        // Je les ajoute ensuite à mon plateau
+        memoryBoard.append(card);
+        memoryBoard.append(cardbis);
+
+        // Je défini ici le bon offeset qui me permettra d'afficher le bon fruit associer à chaque paire de carte
+        var spriteOffset = i * 100;
+        $('#pair'+i).css('background-position','0px ' + spriteOffset + 'px');
+        $('#pairbis'+i).css('background-position','0px ' + spriteOffset + 'px');
+    }
+
+    // Je reccupère ensuite mon plateau de carte et le mélange
+    var parent = $("#board-game");
+    var divs = parent.children();
+    while (divs.length) {
+        parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
+    }
+
+    // J'assigne une fonction sur l'évenement onClick de mes cartes
+    $('.card').on('click', handleClickCard);
+}
+
+// <===========================================================>
+
+
+
+
 // <====================== EVENEMENT ==========================>
-$( ".card" ).on('click', function (e) {
+let handleClickCard = function (e) {
     e.preventDefault();
-    var card = $(this);
+    let card = $(this);
 
     // On verifie que l'élément est cliquable
     if (!card.hasClass('unbinded') && !card.hasClass('wait')) {
@@ -58,9 +129,12 @@ $( ".card" ).on('click', function (e) {
                 numberPairFound++;
                 turnCard(card.attr('id'));
                 console.log('nouvelle pair découverte');
-                if (numberPairFound === PAIR_NUMBER) {
+                if (numberPairFound === 1) {
                     postScore(timePassed);
-                    $('#modal-content').html('<h1>Gagné</h1><span>Score : '+ timePassed +'</span>');
+                    getScores();
+                    $('#modal-content').html('<h1>Gagné</h1><h2>Score : '+ formatTime(timePassed) +'</h2>');
+                    $('#modal-content').append('<button id="restart" class="btn btn-success">Rejouer !</button>');
+                    $('#restart').on('click', restartGame);
                     $('#modal').show();
                     console.log('Wiiiiin');
                     clearInterval(timerInterval);
@@ -91,7 +165,7 @@ $( ".card" ).on('click', function (e) {
             isNewTry = true;
         }
     }
-});
+}
 
 let handleSubmitForm = function (e) {
     e.preventDefault();
@@ -100,10 +174,17 @@ let handleSubmitForm = function (e) {
         url: "/register",
         type: 'POST',
         data: form_data
-    }).done(function(response) { //
-        playerId = response.id;
-        $('#modal').hide();
-        startTimer();
+    }).done(function(response) {
+        if (response.status === 'success') {
+            playerId = response.id;
+            generateBoardGame();
+            $('#modal').hide();
+            startTimer();
+        } else {
+            $('#modal-content').html(response);
+            $('#register-form').on('submit', handleSubmitForm);
+        }
+
         console.log('ça passe !');
     }).fail(()=>{
         console.log('ERROR ON SUBMIT');
@@ -145,7 +226,7 @@ function postScore(score) {
     });
 }
 
-function getScores(score) {
+function getScores() {
 
     $.ajax({
         url: "/scores",
@@ -154,6 +235,7 @@ function getScores(score) {
         console.log('score enregistré');
         let scores = JSON.parse(response);
         let table = $('#scores tbody');
+        table.empty();
         for (let i in scores) {
             let tr = document.createElement('tr');
 
@@ -163,7 +245,7 @@ function getScores(score) {
 
             th.innerHTML = String(parseInt(i) + 1);
             tdName.innerHTML = scores[i].player.username;
-            tdScore.innerHTML = scores[i].time;
+            tdScore.innerHTML = formatTime(scores[i].time);
 
             th.scope = 'row';
 
@@ -182,7 +264,6 @@ function getScores(score) {
 
 
 // <====================== TIMER ==========================>
-
 
 $("#timer").html(`
 <div class="base-timer">
@@ -208,9 +289,13 @@ $("#timer").html(`
 </div>
 `);
 
+// Si le temps est écoulé, le joueur a perdu la partie
 function onTimesUp() {
     clearInterval(timerInterval);
-    $('#modal-content').html('<h1>Perdu !</h1>')
+    $('#modal-content')
+        .html('<h1>Perdu !</h1>')
+        .append('<button id="restart" class="btn btn-success">Rejouer !</button>');
+    $('#restart').on('click', restartGame);
     $('#modal').show();
 }
 
@@ -263,54 +348,3 @@ function setCircleDasharray() {
 }
 
 // <===========================================================>
-
-
-// Retourne une carte face ouverte si face caché et face caché si face ouverte
-function turnCard(idCard) {
-    var card = $('#' + idCard);
-    if (card.hasClass('recto')) {
-        card.removeClass('recto').addClass('back').removeClass('unbinded');
-    } else if (card.hasClass('back')) {
-        card.removeClass('back').addClass('recto').addClass('unbinded');
-    }
-}
-
-function generateBoardGame() {
-    // Je réccupère ma div contenant mon plateau de carte
-    var memoryBoard = $('#board-game');
-
-    // Je supprime le contenu de la div avant de composer mon nouveau plateau
-    memoryBoard.empty();
-
-    // Pour chaque paire de carte
-    for (var i = 0; i < PAIR_NUMBER; i++)
-    {
-        // Je crée une div associé à une carte
-        var card = document.createElement('div');
-        card.id = 'pair' + i;
-        card.className = 'card block col col-lg-2 back';
-        card.dataset.pair = i;
-
-        // Et sa paire
-        var cardbis = document.createElement('div');
-        cardbis.id = 'pairbis' + i;
-        cardbis.className = 'card block col col-lg-2 back';
-        cardbis.dataset.pair = i;
-
-        // Je les ajoute ensuite à mon plateau
-        memoryBoard.append(card);
-        memoryBoard.append(cardbis);
-
-        // Je défini ici le bon offeset qui me permettra d'afficher le bon fruit associer à chaque paire de carte
-        var spriteOffset = i * 100;
-        $('#pair'+i).css('background-position','0px ' + spriteOffset + 'px');
-        $('#pairbis'+i).css('background-position','0px ' + spriteOffset + 'px');
-    }
-
-    // Je reccupère ensuite mon plateau de carte et le mélange
-    var parent = $("#board-game");
-    var divs = parent.children();
-    while (divs.length) {
-        parent.append(divs.splice(Math.floor(Math.random() * divs.length), 1)[0]);
-    }
-}

@@ -47,7 +47,11 @@ class MemoryGameController extends AbstractController
             $em->persist($player);
             $em->flush();
 
-            return new JsonResponse(['id' => $player->getId(), 'name' => $player->getUsername()]);
+            return new JsonResponse([
+                'id'        => $player->getId(),
+                'name'      => $player->getUsername(),
+                'status'    => 'success'
+            ]);
         }
 
         return $this->render('memory_game/register.html.twig', array('form' => $form->createView()));
@@ -67,7 +71,6 @@ class MemoryGameController extends AbstractController
 
         $score = new Score();
         $score->setTime($request->get('time'));
-
         $score->setPlayer($player);
 
         $em->persist($score);
