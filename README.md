@@ -1,17 +1,22 @@
-# Memory-game
+# Memory
 
-● Au commencement du jeu, des cartes sont disposées face cachée à l'écran.
+Test technique pour ma candidature O'clock
 
-● Le joueur doit cliquer sur deux cartes. Si celles-ci sont identiques, la paire est
-validée. Sinon, les cartes sont retournées face cachée, et le joueur doit sélectionner
-une nouvelle paire de cartes.
+## Environnement 
 
-● Une compteur de temps, avec une barre de progression, s’affiche en dessous du
-plateau.
+J'ai décider de partir sur le Framework Symfony5.
 
-● Le joueur gagne s'il arrive à découvrir toutes les paires avant la fin du temps imparti.
+Pour gérer facilement la persistance des données avec l'ORM Doctrine qui est nativement sur Symfony.
 
-● Chaque temps de partie effectuée doit être sauvegardée en base de données.
-Avant le début du jeu, les meilleurs temps s’affichent à l’écran.
+Ainsi que pour faciliter la gestion de mes sources JS et CSS avec le bundle Encore Webpack.
 
-## Memory-game
+## Code
+
+Les fichiers JS et CSS se trouvent dans le dossier "/assets" et sont compilés dans le dossier "/public/build".
+
+Le code servant à gérer le jeu se trouve dans le fichier "/assets/js/board-game.js".
+
+Les templates se trouvent eux dans le dossier "/template".
+
+Le code servant à intéragir avec la base de donnée se trouvent dans le controller : "/src/controller/MemoryGameController.php"
+
