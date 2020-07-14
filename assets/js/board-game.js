@@ -129,7 +129,7 @@ let handleClickCard = function (e) {
                 numberPairFound++;
                 turnCard(card.attr('id'));
                 console.log('nouvelle pair découverte');
-                if (numberPairFound === 1) {
+                if (numberPairFound === PAIR_NUMBER) {
                     postScore(timePassed);
                     getScores();
                     $('#modal-content').html('<h1>Gagné</h1><h2>Score : '+ formatTime(timePassed) +'</h2>');
