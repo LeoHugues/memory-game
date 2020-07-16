@@ -4,9 +4,9 @@ Test technique pour ma candidature O'clock
 
 ## Environnement 
 
-J'ai décider de partir sur le Framework Symfony5.
+J'ai décidé de partir sur le Framework Symfony5.
 
-Pour gérer facilement la persistance des données avec l'ORM Doctrine qui est nativement sur Symfony.
+Pour gérer facilement la persistance des données avec l'ORM Doctrine, qui est nativement sur Symfony.
 
 Ainsi que pour faciliter la gestion de mes sources JS et CSS avec le bundle Encore Webpack.
 
